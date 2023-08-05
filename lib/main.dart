@@ -34,6 +34,7 @@ class _MyHomePageState extends State<MyHomePage>
   late AnimationController _controller;
   late Animation<Color?> _containerColorAnimation;
   late Animation<Color?> _textColorAnimation;
+  late Animation<double> _textScaleAnimation;
 
   Color _backgroundColor = ColorUtil.generateRandomColor();
   Color _textColor = ColorUtil.generateRandomColor();
@@ -47,11 +48,7 @@ class _MyHomePageState extends State<MyHomePage>
       duration: const Duration(milliseconds: 500), // Animation duration
     );
 
-    _containerColorAnimation =
-        ColorTween(begin: _backgroundColor, end: _backgroundColor)
-            .animate(_controller);
-    _textColorAnimation =
-        ColorTween(begin: _textColor, end: _textColor).animate(_controller);
+    _changeColors();
   }
 
   @override
@@ -69,11 +66,14 @@ class _MyHomePageState extends State<MyHomePage>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text(
-                      'HELLO THERE',
-                      style: GoogleFonts.lilitaOne(
-                          textStyle: const TextStyle(fontSize: 50),
-                          color: _textColorAnimation.value),
+                    ScaleTransition(
+                      scale: _textScaleAnimation,
+                      child: Text(
+                        'HELLO THERE',
+                        style: GoogleFonts.lilitaOne(
+                            textStyle: const TextStyle(fontSize: 50),
+                            color: _textColorAnimation.value),
+                      ),
                     ),
                   ],
                 ),
@@ -92,15 +92,24 @@ class _MyHomePageState extends State<MyHomePage>
     _containerColorAnimation =
         ColorTween(begin: _backgroundColor, end: newBackgroundColor)
             .animate(_controller);
-    _textColorAnimation =
-        ColorTween(begin: _textColor, end: newTextColor).animate(_controller);
+
+    if (_textColor != newTextColor) {
+      _textColor = newTextColor;
+
+      _textColorAnimation =
+          ColorTween(begin: _textColor, end: newTextColor).animate(_controller);
+    }
+
+    _textScaleAnimation = Tween(begin: 0.8, end: 1.1).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.bounceOut,
+      ),
+    );
+
+    _backgroundColor = newBackgroundColor;
 
     _controller.forward(from: 0.0);
-
-    setState(() {
-      _backgroundColor = newBackgroundColor;
-      _textColor = newTextColor;
-    });
   }
 
   @override
