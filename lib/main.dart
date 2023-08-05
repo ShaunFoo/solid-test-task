@@ -41,7 +41,11 @@ class _MyHomePageState extends State<MyHomePage> {
           onTap: () {
             setState(() {
               _backgroundColor = ColorUtil.generateRandomColor();
-              _textColor = ColorUtil.generateRandomColor();
+              Color textColor = ColorUtil.generateRandomColor();
+
+              if (_backgroundColor != textColor) {
+                _textColor = textColor;
+              }
             });
           },
           child: Container(
