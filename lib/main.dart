@@ -94,10 +94,9 @@ class _MyHomePageState extends State<MyHomePage>
             .animate(_controller);
 
     if (_textColor != newTextColor) {
-      _textColor = newTextColor;
-
       _textColorAnimation =
           ColorTween(begin: _textColor, end: newTextColor).animate(_controller);
+      _textColor = newTextColor;
     }
 
     _textScaleAnimation = Tween(begin: 0.8, end: 1.1).animate(
